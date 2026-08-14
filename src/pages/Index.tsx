@@ -440,10 +440,7 @@ export default function Index() {
     }
     const localMembership = getUserMembership(user.id);
     if (localMembership) { setActiveTier(localMembership.tier); return; }
-    fetch(`/api/membership?email=${encodeURIComponent(user.email)}`)
-      .then((res) => res.json())
-      .then((data) => { if (data.membership) setActiveTier(data.membership.tier); else setActiveTier(null); })
-      .catch(() => setActiveTier(null));
+    setActiveTier(null);
   }, [user?.email, checkoutStatus]);
 
   useEffect(() => {
