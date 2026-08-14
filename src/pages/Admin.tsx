@@ -202,7 +202,7 @@ export default function AdminPage() {
   useEffect(() => setOwner(isOwnerSession()), []);
   useEffect(() => {
     if (!loading && !user && !isOwnerSession()) navigate("/auth");
-  }, [loading, user, navigate, owner]);
+  }, [loading, user, navigate]);
 
   async function signOut() {
     ownerLogout();
@@ -805,7 +805,7 @@ function MaintenancePanel({ canManage, isOwner }: { canManage: boolean; isOwner:
         const creds = getOwnerCredentials();
         await db.rpc("owner_upsert_setting", { _username: creds.username, _password: creds.password, _key: "maintenance", _value: value });
       } else {
-        await db.from("site_settings").upsert({ key: "maintenance", value }, { onConflict: "key" });
+        await db.rpc("admin_upsert_setting", { _key: "maintenance", _value: value });
       }
     } catch { /* Supabase optional; local storage still works */ }
     toast.success(enabled ? `Maintenance ON${useTimer ? ` - auto-reopens in ${durationMins}m` : ""}` : "Maintenance OFF - website is live");

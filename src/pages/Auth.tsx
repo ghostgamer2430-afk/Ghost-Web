@@ -47,11 +47,21 @@ export default function AuthPage() {
           return;
         }
         try {
-          const { error } = await supabase.auth.signUp({
+          const { data, error } = await supabase.auth.signUp({
             email, password,
             options: { emailRedirectTo: `${window.location.origin}/auth` },
           });
           if (error) throw error;
+          // Create a profile row so the admin panel can see this member
+          if (data.user) {
+            try {
+              await supabase.rpc("upsert_profile", {
+                _email: email,
+                _display_name: email.split("@")[0],
+                _credits: 2600,
+              });
+            } catch { /* profile creation is best-effort */ }
+          }
           toast.success("Member account created. Check your email if confirmation is required, then sign in.");
           setMode("signin");
         } catch (err) {
@@ -69,8 +79,18 @@ export default function AuthPage() {
           return;
         }
         try {
-          const { error } = await supabase.auth.signInWithPassword({ email, password });
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
           if (error) throw error;
+          // Ensure a profile row exists for this user
+          if (data.user) {
+            try {
+              await supabase.rpc("upsert_profile", {
+                _email: email,
+                _display_name: email.split("@")[0],
+                _credits: 2600,
+              });
+            } catch { /* best-effort */ }
+          }
           // Supabase auth state change will trigger navigation via useEffect
         } catch (err) {
           // Fall back to local accounts on any Supabase error (fetch or auth error)
