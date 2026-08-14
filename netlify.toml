@@ -1,0 +1,6 @@
+# Nitro auto-detects the `netlify` preset during the Netlify build and emits
+# static assets to `dist` (the server handler goes to `.netlify/functions-internal`).
+# `dist/client` is only produced by the Cloudflare preset used in local sandboxes.
+[build]
+  command = "bun run build"
+  publish = "dist"
