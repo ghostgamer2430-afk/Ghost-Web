@@ -21,8 +21,9 @@ import { BUILT_IN_ROOMS, getCustomRooms, getMessages, deleteMessage, deleteRoom,
 import { getPhoneRequests, decidePhoneRequest, deletePhoneRequest, PHONE_PRICE, PHONE_NAME, type PhoneRequest } from "@/lib/phoneAccess";
 import { syncPhoneDiscordRole } from "@/lib/phoneNotify.functions";
 import { getAdminNotifications, unreadAdminCount, markAllAdminNotificationsRead, markAdminNotificationRead, deleteAdminNotification, clearAdminNotifications, type AdminNotification } from "@/lib/adminNotifications";
+import { fetchAllPostsAdmin, adminRemovePost, adminPinPost, fetchAdminLogs, logAction, type ForumPost as FPost, type AdminLog as ALog } from "@/lib/forum";
 
-type Tab = "overview" | "admins" | "members" | "maintenance" | "licenses" | "credits" | "posts" | "wheel" | "casino" | "announcements" | "bans" | "analytics" | "store" | "events" | "tickets" | "settings" | "coupons" | "chat" | "phone";
+type Tab = "overview" | "admins" | "members" | "maintenance" | "licenses" | "credits" | "posts" | "wheel" | "casino" | "announcements" | "bans" | "analytics" | "store" | "events" | "tickets" | "settings" | "coupons" | "chat" | "phone" | "sales" | "logs" | "forum";
 const db = supabase as any;
 const hasSupabase = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
 const noSupabaseError = () => new Error("Supabase is not configured, using local website accounts.");
@@ -223,6 +224,9 @@ export default function AdminPage() {
     ["maintenance", "Maintenance", Wrench, false],
     ["licenses", "License Keys", KeyRound, false],
     ["credits", "Credits", Coins, false],
+    ["sales", "Sales Manager", DollarSign, false],
+    ["forum", "Forum Manager", Newspaper, false],
+    ["logs", "Admin Logs", FileText, false],
     ["posts", "Posts", Newspaper, false],
     ["wheel", "Wheel Spins", Gift, false],
     ["casino", "Casino Manager", Gamepad2, true],
@@ -270,6 +274,9 @@ export default function AdminPage() {
             {tab === "maintenance" && <MaintenancePanel canManage={owner || isAdmin} isOwner={owner} />}
             {tab === "licenses" && <LicenseKeysPanel owner={owner} userEmail={user?.email ?? OWNER_USERNAME} />}
             {tab === "credits" && <CreditsPanel />}
+            {tab === "sales" && <SalesManagerPanel owner={owner} />}
+            {tab === "forum" && <ForumManagerPanel owner={owner} isAdmin={isAdmin} />}
+            {tab === "logs" && <AdminLogsPanel />}
             {tab === "posts" && <PostsPanel />}
             {tab === "wheel" && <WheelPanel />}
             {tab === "casino" && <CasinoManagerPanel owner={owner} />}
@@ -307,26 +314,91 @@ function Info({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+const ADMIN_FEATURES_50 = [
+  "Create and remove admin accounts",
+  "Ban and unban members",
+  "Adjust member casino credits",
+  "Delete member accounts",
+  "Toggle maintenance mode with countdown timer",
+  "Create and deactivate license keys",
+  "Generate 3-day trial membership keys",
+  "Generate membership keys (all 6 tiers)",
+  "Generate item/pack purchase keys",
+  "Generate casino credit keys",
+  "Create and manage coupon codes",
+  "Toggle coupon codes on/off",
+  "Set coupon expiry dates and max uses",
+  "Manage sales — turn sales on or off",
+  "Set global discount percentage",
+  "Create sale events with start/end dates",
+  "Manage and moderate the FiveM forum",
+  "Remove inappropriate forum posts",
+  "Pin important forum posts",
+  "View all forum posts including removed ones",
+  "Review and approve phone purchase requests",
+  "Sync Discord phone role on approval",
+  "Deny or revoke phone access",
+  "Manage casino games — enable/disable",
+  "View casino house edge and play stats",
+  "Post site announcements (info/warning/event)",
+  "Delete announcements",
+  "Create and remove ban records",
+  "Create and manage server events",
+  "View analytics dashboard (members, activity, credits)",
+  "View top casino game statistics",
+  "Manage store items (add/remove)",
+  "Reply to support tickets",
+  "Assign license keys to tickets on approval",
+  "Resolve and close support tickets",
+  "Moderate chat rooms — delete messages",
+  "Clear all messages in a chat room",
+  "Delete private chat rooms",
+  "View active private rooms with PINs",
+  "Configure site settings (casino, wheel, store toggles)",
+  "Set Discord invite link and server connect command",
+  "Toggle registration open/closed",
+  "Toggle leaderboard visibility",
+  "Auto audit log — every admin action is tracked",
+  "View full admin action history with timestamps",
+  "Promote existing members to admin without changing password",
+  "Create member accounts with custom starting credits",
+  "Search and filter member accounts",
+  "View admin notifications and mark as read",
+  "Owner-only restricted tabs for sensitive operations",
+];
+
 function Overview({ owner }: { owner: boolean }) {
   return (
-    <div className="grid lg:grid-cols-2 gap-6">
-      <Card title="Owner Powers" icon={Shield}>
-        <ul className="space-y-2 text-sm text-muted-foreground">
-          <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />Owner can create admins, remove admins, kick/ban members.</li>
-          <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />Only the owner can toggle maintenance mode.</li>
-          <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />15 admin tabs: members, casino, bans, analytics, store, events, tickets, settings.</li>
-          <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />Global 35% discount is active on the website.</li>
-        </ul>
-        {!owner && <p className="mt-4 text-fuchsia-300 text-sm font-bold">You are an admin, not the owner. Owner-only controls are locked.</p>}
-      </Card>
-      <Card title="Live Features" icon={Sparkles}>
-        <div className="grid sm:grid-cols-2 gap-3 text-sm">
-          <Info label="Casino Games" value="25 games live" />
-          <Info label="Server Features" value="125+ features" />
-          <Info label="Daily Wheel" value="1 free daily spin" />
-          <Info label="Weekly Wheel" value="1 free weekly spin" />
-          <Info label="Paid Spin" value="5,000 credits" />
-          <Info label="Jackpot" value="10,000 credits" />
+    <div className="space-y-6">
+      <div className="grid lg:grid-cols-2 gap-6">
+        <Card title="Owner Powers" icon={Shield}>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />Owner can create admins, remove admins, kick/ban members.</li>
+            <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />Only the owner can toggle maintenance mode.</li>
+            <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />22 admin tabs including sales, forum, and audit logs.</li>
+            <li><CheckCircle2 className="inline text-fuchsia-300 mr-2" size={16} />Global 45% discount is active on the website.</li>
+          </ul>
+          {!owner && <p className="mt-4 text-fuchsia-300 text-sm font-bold">You are an admin, not the owner. Owner-only controls are locked.</p>}
+        </Card>
+        <Card title="Live Features" icon={Sparkles}>
+          <div className="grid sm:grid-cols-2 gap-3 text-sm">
+            <Info label="Casino Games" value="25 games live" />
+            <Info label="Server Features" value="125+ features" />
+            <Info label="Admin Features" value="50 features" />
+            <Info label="Forum" value="Live with locked links" />
+            <Info label="Daily Wheel" value="1 free daily spin" />
+            <Info label="Jackpot" value="10,000 credits" />
+          </div>
+        </Card>
+      </div>
+      <Card title="50 Admin Panel Features" icon={CheckCircle2}>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {ADMIN_FEATURES_50.map((f, i) => (
+            <div key={i} className="flex items-start gap-2 text-xs text-muted-foreground rounded border border-fuchsia-400/20 p-2">
+              <span className="text-fuchsia-300 font-black shrink-0">{i + 1}.</span>
+              <span>{f}</span>
+            </div>
+          ))}
         </div>
       </Card>
     </div>

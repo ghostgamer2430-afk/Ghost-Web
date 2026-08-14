@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as ForumRouteImport } from './routes/forum'
 import { Route as PhoneRouteImport } from './routes/phone'
 import { Route as ProfileRouteImport } from './routes/profile'
 
@@ -36,6 +37,11 @@ const ChatRoute = ChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForumRoute = ForumRouteImport.update({
+  id: '/forum',
+  path: '/forum',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PhoneRoute = PhoneRouteImport.update({
   id: '/phone',
   path: '/phone',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/forum': typeof ForumRoute
   '/phone': typeof PhoneRoute
   '/profile': typeof ProfileRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/forum': typeof ForumRoute
   '/phone': typeof PhoneRoute
   '/profile': typeof ProfileRoute
 }
@@ -69,15 +77,25 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/forum': typeof ForumRoute
   '/phone': typeof PhoneRoute
   '/profile': typeof ProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/auth' | '/chat' | '/phone' | '/profile'
+  fullPaths:
+    '/' | '/admin' | '/auth' | '/chat' | '/forum' | '/phone' | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/auth' | '/chat' | '/phone' | '/profile'
-  id: '__root__' | '/' | '/admin' | '/auth' | '/chat' | '/phone' | '/profile'
+  to: '/' | '/admin' | '/auth' | '/chat' | '/forum' | '/phone' | '/profile'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/chat'
+    | '/forum'
+    | '/phone'
+    | '/profile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -85,6 +103,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
   ChatRoute: typeof ChatRoute
+  ForumRoute: typeof ForumRoute
   PhoneRoute: typeof PhoneRoute
   ProfileRoute: typeof ProfileRoute
 }
@@ -119,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forum': {
+      id: '/forum'
+      path: '/forum'
+      fullPath: '/forum'
+      preLoaderRoute: typeof ForumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/phone': {
       id: '/phone'
       path: '/phone'
@@ -141,6 +167,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   ChatRoute: ChatRoute,
+  ForumRoute: ForumRoute,
   PhoneRoute: PhoneRoute,
   ProfileRoute: ProfileRoute,
 }
