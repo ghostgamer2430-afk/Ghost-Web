@@ -5,12 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { ownerLogin } from "@/lib/owner";
-import { createLocalMember, signInLocal, isSupabaseFetchError } from "@/lib/localAuth";
 
 export default function AuthPage() {
   const [, navigate] = useLocation();
   const { session, isAdmin, loading } = useAuth();
-  // Default to "signin" — most returning users want to sign in, not create a new account
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,78 +36,37 @@ export default function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      const hasSupabase = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
       if (mode === "signup") {
-        if (!hasSupabase) {
-          createLocalMember(email, password);
-          toast.success("Member account created. You can sign in now.");
-          setMode("signin");
-          return;
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: `${window.location.origin}/auth` },
+        });
+        if (error) throw error;
+        if (data.user) {
+          try {
+            await supabase.rpc("upsert_profile", {
+              _email: email,
+              _display_name: email.split("@")[0],
+              _credits: 2600,
+            });
+          } catch { /* profile creation is best-effort */ }
         }
-        try {
-          const { data, error } = await supabase.auth.signUp({
-            email, password,
-            options: { emailRedirectTo: `${window.location.origin}/auth` },
-          });
-          if (error) throw error;
-          // Create a profile row so the admin panel can see this member
-          if (data.user) {
-            try {
-              await supabase.rpc("upsert_profile", {
-                _email: email,
-                _display_name: email.split("@")[0],
-                _credits: 2600,
-              });
-            } catch { /* profile creation is best-effort */ }
-          }
-          toast.success("Member account created. Check your email if confirmation is required, then sign in.");
-          setMode("signin");
-        } catch (err) {
-          if (!isSupabaseFetchError(err)) throw err;
-          createLocalMember(email, password);
-          toast.success("Member account created locally. You can sign in now.");
-          setMode("signin");
-        }
+        toast.success("Member account created. You can sign in now.");
+        setMode("signin");
       } else {
-        // Sign in — try Supabase first, fall back to local accounts
-        if (!hasSupabase) {
-          const local = signInLocal(email, password);
-          toast.success("Signed in");
-          navigate(local.role === "admin" ? "/admin" : "/");
-          return;
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        if (data.user) {
+          try {
+            await supabase.rpc("upsert_profile", {
+              _email: email,
+              _display_name: email.split("@")[0],
+              _credits: 2600,
+            });
+          } catch { /* best-effort */ }
         }
-        try {
-          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) throw error;
-          // Ensure a profile row exists for this user
-          if (data.user) {
-            try {
-              await supabase.rpc("upsert_profile", {
-                _email: email,
-                _display_name: email.split("@")[0],
-                _credits: 2600,
-              });
-            } catch { /* best-effort */ }
-          }
-          // Supabase auth state change will trigger navigation via useEffect
-        } catch (err) {
-          // Fall back to local accounts on any Supabase error (fetch or auth error)
-          if (!isSupabaseFetchError(err)) {
-            // Try local login as a fallback even for non-fetch Supabase errors
-            try {
-              const local = signInLocal(email, password);
-              toast.success("Signed in locally");
-              navigate(local.role === "admin" ? "/admin" : "/");
-              return;
-            } catch {
-              // If local also fails, show the original Supabase error
-              throw err;
-            }
-          }
-          const local = signInLocal(email, password);
-          toast.success("Signed in locally");
-          navigate(local.role === "admin" ? "/admin" : "/");
-        }
+        // Auth state change will trigger navigation via useEffect
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Authentication failed";

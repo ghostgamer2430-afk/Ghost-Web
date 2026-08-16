@@ -53,38 +53,12 @@ function AdminLoginGate() {
     e.preventDefault();
     setBusy(true);
     try {
-      // Always try local login first if Supabase is not configured
-      if (!hasSupabase) {
-        const local = signInLocal(memberEmail, memberPass);
-        if (local.role !== "admin") {
-          toast.error("This account does not have admin access.");
-          return;
-        }
-        toast.success("Signed in as admin");
-        window.location.reload();
-        return;
-      }
-      // Try Supabase first
-      try {
-        const { error } = await supabase.auth.signInWithPassword({ email: memberEmail, password: memberPass });
-        if (error) throw error;
-        toast.success("Signed in");
-        window.location.reload();
-      } catch (supabaseErr) {
-        // Fall back to local login on any Supabase error
-        try {
-          const local = signInLocal(memberEmail, memberPass);
-          if (local.role !== "admin") {
-            toast.error("This account does not have admin access.");
-            return;
-          }
-          toast.success("Signed in as admin (local)");
-          window.location.reload();
-        } catch (localErr) {
-          // Show the local error (more specific) or Supabase error
-          toast.error(localErr instanceof Error ? localErr.message : supabaseErr instanceof Error ? supabaseErr.message : "Login failed");
-        }
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email: memberEmail, password: memberPass });
+      if (error) throw error;
+      toast.success("Signed in");
+      window.location.reload();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Login failed");
     } finally { setBusy(false); }
   }
 
