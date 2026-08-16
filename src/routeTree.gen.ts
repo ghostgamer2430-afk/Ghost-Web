@@ -10,21 +10,48 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ActivityLogsRouteImport } from './routes/activity-logs'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AdminSettingsRouteImport } from './routes/admin-settings'
+import { Route as AnnouncementsRouteImport } from './routes/announcements'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as EventDetailsRouteImport } from './routes/event-details'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as ForumRouteImport } from './routes/forum'
+import { Route as ManageRsvpsRouteImport } from './routes/manage-rsvps'
+import { Route as MemberDirectoryRouteImport } from './routes/member-directory'
+import { Route as MembershipPlansRouteImport } from './routes/membership-plans'
+import { Route as PaymentHistoryRouteImport } from './routes/payment-history'
 import { Route as PhoneRouteImport } from './routes/phone'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as RegistrationRequestRouteImport } from './routes/registration-request'
+import { Route as UserProfileRouteImport } from './routes/user-profile'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ActivityLogsRoute = ActivityLogsRouteImport.update({
+  id: '/activity-logs',
+  path: '/activity-logs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/admin-settings',
+  path: '/admin-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnnouncementsRoute = AnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -37,9 +64,44 @@ const ChatRoute = ChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventDetailsRoute = EventDetailsRouteImport.update({
+  id: '/event-details',
+  path: '/event-details',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForumRoute = ForumRouteImport.update({
   id: '/forum',
   path: '/forum',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManageRsvpsRoute = ManageRsvpsRouteImport.update({
+  id: '/manage-rsvps',
+  path: '/manage-rsvps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemberDirectoryRoute = MemberDirectoryRouteImport.update({
+  id: '/member-directory',
+  path: '/member-directory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembershipPlansRoute = MembershipPlansRouteImport.update({
+  id: '/membership-plans',
+  path: '/membership-plans',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentHistoryRoute = PaymentHistoryRouteImport.update({
+  id: '/payment-history',
+  path: '/payment-history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PhoneRoute = PhoneRouteImport.update({
@@ -52,60 +114,167 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegistrationRequestRoute = RegistrationRequestRouteImport.update({
+  id: '/registration-request',
+  path: '/registration-request',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserProfileRoute = UserProfileRouteImport.update({
+  id: '/user-profile',
+  path: '/user-profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activity-logs': typeof ActivityLogsRoute
   '/admin': typeof AdminRoute
+  '/admin-settings': typeof AdminSettingsRoute
+  '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
+  '/event-details': typeof EventDetailsRoute
+  '/events': typeof EventsRoute
   '/forum': typeof ForumRoute
+  '/manage-rsvps': typeof ManageRsvpsRoute
+  '/member-directory': typeof MemberDirectoryRoute
+  '/membership-plans': typeof MembershipPlansRoute
+  '/payment-history': typeof PaymentHistoryRoute
   '/phone': typeof PhoneRoute
   '/profile': typeof ProfileRoute
+  '/registration-request': typeof RegistrationRequestRoute
+  '/user-profile': typeof UserProfileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activity-logs': typeof ActivityLogsRoute
   '/admin': typeof AdminRoute
+  '/admin-settings': typeof AdminSettingsRoute
+  '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
+  '/event-details': typeof EventDetailsRoute
+  '/events': typeof EventsRoute
   '/forum': typeof ForumRoute
+  '/manage-rsvps': typeof ManageRsvpsRoute
+  '/member-directory': typeof MemberDirectoryRoute
+  '/membership-plans': typeof MembershipPlansRoute
+  '/payment-history': typeof PaymentHistoryRoute
   '/phone': typeof PhoneRoute
   '/profile': typeof ProfileRoute
+  '/registration-request': typeof RegistrationRequestRoute
+  '/user-profile': typeof UserProfileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/activity-logs': typeof ActivityLogsRoute
   '/admin': typeof AdminRoute
+  '/admin-settings': typeof AdminSettingsRoute
+  '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
+  '/event-details': typeof EventDetailsRoute
+  '/events': typeof EventsRoute
   '/forum': typeof ForumRoute
+  '/manage-rsvps': typeof ManageRsvpsRoute
+  '/member-directory': typeof MemberDirectoryRoute
+  '/membership-plans': typeof MembershipPlansRoute
+  '/payment-history': typeof PaymentHistoryRoute
   '/phone': typeof PhoneRoute
   '/profile': typeof ProfileRoute
+  '/registration-request': typeof RegistrationRequestRoute
+  '/user-profile': typeof UserProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/admin' | '/auth' | '/chat' | '/forum' | '/phone' | '/profile'
+    | '/'
+    | '/activity-logs'
+    | '/admin'
+    | '/admin-settings'
+    | '/announcements'
+    | '/auth'
+    | '/chat'
+    | '/dashboard'
+    | '/event-details'
+    | '/events'
+    | '/forum'
+    | '/manage-rsvps'
+    | '/member-directory'
+    | '/membership-plans'
+    | '/payment-history'
+    | '/phone'
+    | '/profile'
+    | '/registration-request'
+    | '/user-profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/auth' | '/chat' | '/forum' | '/phone' | '/profile'
+  to:
+    | '/'
+    | '/activity-logs'
+    | '/admin'
+    | '/admin-settings'
+    | '/announcements'
+    | '/auth'
+    | '/chat'
+    | '/dashboard'
+    | '/event-details'
+    | '/events'
+    | '/forum'
+    | '/manage-rsvps'
+    | '/member-directory'
+    | '/membership-plans'
+    | '/payment-history'
+    | '/phone'
+    | '/profile'
+    | '/registration-request'
+    | '/user-profile'
   id:
     | '__root__'
     | '/'
+    | '/activity-logs'
     | '/admin'
+    | '/admin-settings'
+    | '/announcements'
     | '/auth'
     | '/chat'
+    | '/dashboard'
+    | '/event-details'
+    | '/events'
     | '/forum'
+    | '/manage-rsvps'
+    | '/member-directory'
+    | '/membership-plans'
+    | '/payment-history'
     | '/phone'
     | '/profile'
+    | '/registration-request'
+    | '/user-profile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActivityLogsRoute: typeof ActivityLogsRoute
   AdminRoute: typeof AdminRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AnnouncementsRoute: typeof AnnouncementsRoute
   AuthRoute: typeof AuthRoute
   ChatRoute: typeof ChatRoute
+  DashboardRoute: typeof DashboardRoute
+  EventDetailsRoute: typeof EventDetailsRoute
+  EventsRoute: typeof EventsRoute
   ForumRoute: typeof ForumRoute
+  ManageRsvpsRoute: typeof ManageRsvpsRoute
+  MemberDirectoryRoute: typeof MemberDirectoryRoute
+  MembershipPlansRoute: typeof MembershipPlansRoute
+  PaymentHistoryRoute: typeof PaymentHistoryRoute
   PhoneRoute: typeof PhoneRoute
   ProfileRoute: typeof ProfileRoute
+  RegistrationRequestRoute: typeof RegistrationRequestRoute
+  UserProfileRoute: typeof UserProfileRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -117,11 +286,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/activity-logs': {
+      id: '/activity-logs'
+      path: '/activity-logs'
+      fullPath: '/activity-logs'
+      preLoaderRoute: typeof ActivityLogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-settings': {
+      id: '/admin-settings'
+      path: '/admin-settings'
+      fullPath: '/admin-settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/announcements': {
+      id: '/announcements'
+      path: '/announcements'
+      fullPath: '/announcements'
+      preLoaderRoute: typeof AnnouncementsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -138,11 +328,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/event-details': {
+      id: '/event-details'
+      path: '/event-details'
+      fullPath: '/event-details'
+      preLoaderRoute: typeof EventDetailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forum': {
       id: '/forum'
       path: '/forum'
       fullPath: '/forum'
       preLoaderRoute: typeof ForumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manage-rsvps': {
+      id: '/manage-rsvps'
+      path: '/manage-rsvps'
+      fullPath: '/manage-rsvps'
+      preLoaderRoute: typeof ManageRsvpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/member-directory': {
+      id: '/member-directory'
+      path: '/member-directory'
+      fullPath: '/member-directory'
+      preLoaderRoute: typeof MemberDirectoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/membership-plans': {
+      id: '/membership-plans'
+      path: '/membership-plans'
+      fullPath: '/membership-plans'
+      preLoaderRoute: typeof MembershipPlansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment-history': {
+      id: '/payment-history'
+      path: '/payment-history'
+      fullPath: '/payment-history'
+      preLoaderRoute: typeof PaymentHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/phone': {
@@ -159,17 +398,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/registration-request': {
+      id: '/registration-request'
+      path: '/registration-request'
+      fullPath: '/registration-request'
+      preLoaderRoute: typeof RegistrationRequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user-profile': {
+      id: '/user-profile'
+      path: '/user-profile'
+      fullPath: '/user-profile'
+      preLoaderRoute: typeof UserProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActivityLogsRoute: ActivityLogsRoute,
   AdminRoute: AdminRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AnnouncementsRoute: AnnouncementsRoute,
   AuthRoute: AuthRoute,
   ChatRoute: ChatRoute,
+  DashboardRoute: DashboardRoute,
+  EventDetailsRoute: EventDetailsRoute,
+  EventsRoute: EventsRoute,
   ForumRoute: ForumRoute,
+  ManageRsvpsRoute: ManageRsvpsRoute,
+  MemberDirectoryRoute: MemberDirectoryRoute,
+  MembershipPlansRoute: MembershipPlansRoute,
+  PaymentHistoryRoute: PaymentHistoryRoute,
   PhoneRoute: PhoneRoute,
   ProfileRoute: ProfileRoute,
+  RegistrationRequestRoute: RegistrationRequestRoute,
+  UserProfileRoute: UserProfileRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

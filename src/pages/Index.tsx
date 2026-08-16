@@ -511,6 +511,22 @@ export default function Index() {
             <a href="#departments" className="hover:text-primary transition">Departments</a>
             <a href="#packs" className="hover:text-primary transition">Packs</a>
             <a href="/phone" className="hover:text-primary transition">Phone <span className="ml-1 text-[10px] text-primary">$72.99</span></a>
+            <div className="relative group">
+              <button className="hover:text-primary transition flex items-center gap-1">More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div className="absolute top-full right-0 mt-2 hidden group-hover:block bg-card border border-border rounded-lg shadow-xl py-2 min-w-48 z-50">
+                <a href="/dashboard" className="block px-4 py-2 text-xs hover:bg-accent transition">Dashboard</a>
+                <a href="/events" className="block px-4 py-2 text-xs hover:bg-accent transition">Events Calendar</a>
+                <a href="/announcements" className="block px-4 py-2 text-xs hover:bg-accent transition">Announcements</a>
+                <a href="/membership-plans" className="block px-4 py-2 text-xs hover:bg-accent transition">Membership Plans</a>
+                <a href="/member-directory" className="block px-4 py-2 text-xs hover:bg-accent transition">Member Directory</a>
+                <a href="/user-profile" className="block px-4 py-2 text-xs hover:bg-accent transition">User Profile</a>
+                <a href="/payment-history" className="block px-4 py-2 text-xs hover:bg-accent transition">Payment History</a>
+                <a href="/activity-logs" className="block px-4 py-2 text-xs hover:bg-accent transition">Activity Logs</a>
+                <a href="/manage-rsvps" className="block px-4 py-2 text-xs hover:bg-accent transition">Manage RSVPs</a>
+                <a href="/admin-settings" className="block px-4 py-2 text-xs hover:bg-accent transition">Admin Settings</a>
+                <a href="/registration-request" className="block px-4 py-2 text-xs hover:bg-accent transition">Join Request</a>
+              </div>
+            </div>
             <a href={DISCORD_URL} target="_blank" rel="noreferrer" className="hover:text-primary transition">Discord</a>
           </div>
           <div className="flex items-center gap-3">
